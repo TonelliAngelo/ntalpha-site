@@ -7,11 +7,13 @@ export default function Footer(){
 
       <div className="container footer-main">
         <section className="footer-brand">
-          <a href="#inicio" className="footer-wordmark" aria-label="NT ALPHA">
-            <span className="footer-nt">NT</span>
-            <span className="footer-alpha">ALPHA</span>
+          <a href="#inicio" className="footer-logo-link" aria-label="NT ALPHA Consultor Imobiliário">
+            <img
+              src="/images/ntalpha-logo.png"
+              alt="NT ALPHA Consultor Imobiliário"
+              className="footer-logo"
+            />
           </a>
-          <div className="footer-subbrand">CONSULTOR IMOBILIÁRIO</div>
 
           <p className="footer-lead">Consultoria imobiliária em Alphaville e região.</p>
           <p className="footer-description">
@@ -19,7 +21,7 @@ export default function Footer(){
           </p>
 
           <div className="footer-social">
-            <a href={whatsapp} target="_blank" aria-label="WhatsApp" title="WhatsApp">WA</a>
+            <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">WA</a>
             <a href="mailto:nivaldo@ntalpha.com.br" aria-label="E-mail" title="E-mail">@</a>
           </div>
         </section>
@@ -27,7 +29,7 @@ export default function Footer(){
         <section className="footer-column">
           <h4>Contato</h4>
           <span className="footer-title-line" />
-          <a className="footer-info" href={whatsapp} target="_blank">
+          <a className="footer-info" href={whatsapp} target="_blank" rel="noopener noreferrer">
             <span className="footer-icon">☎</span>
             <span><strong>(11) 99951-7092</strong><small>Atendimento via WhatsApp e telefone</small></span>
           </a>
