@@ -2,26 +2,29 @@
   position:sticky;
   top:0;
   z-index:50;
-  background:rgba(247,247,245,.94);
+  background:rgba(247,247,245,.96);
   backdrop-filter:blur(12px);
   border-bottom:1px solid var(--line);
 }
 .header-inner{
-  min-height:74px;
+  min-height:82px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:28px;
 }
-.brand{
+.brand-logo{
   display:flex;
-  align-items:baseline;
-  gap:6px;
-  font-size:22px;
-  font-weight:800;
-  letter-spacing:2px;
+  align-items:center;
+  flex:0 0 auto;
 }
-.brand span{color:var(--accent)}
+.brand-logo img{
+  display:block;
+  width:180px;
+  height:auto;
+  max-height:66px;
+  object-fit:contain;
+}
 .nav{
   display:flex;
   gap:26px;
@@ -30,3 +33,43 @@
 }
 .nav a:hover{color:#111}
 .header-actions{display:flex;align-items:center;gap:10px}
+
+.mobile-menu{display:none;position:relative}
+.mobile-menu summary{
+  list-style:none;
+  cursor:pointer;
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--line);
+  border-radius:10px;
+  font-size:22px;
+  background:#fff;
+}
+.mobile-menu summary::-webkit-details-marker{display:none}
+.mobile-menu-panel{
+  position:absolute;
+  right:0;
+  top:54px;
+  min-width:220px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  padding:10px;
+  display:grid;
+  gap:4px;
+}
+.mobile-menu-panel a{
+  padding:12px 14px;
+  border-radius:8px;
+  color:#343a3f;
+}
+.mobile-menu-panel a:hover{background:var(--surface-alt)}
+.mobile-menu-panel .mobile-whatsapp{
+  background:var(--dark);
+  color:#fff;
+  text-align:center;
+  margin-top:4px;
+}

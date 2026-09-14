@@ -1,17 +1,62 @@
+@media(max-width:1100px){
+  .hero h1{font-size:clamp(40px,5vw,62px)}
+}
 @media(max-width:960px){
-  .nav{display:none}
+  .desktop-nav,.desktop-actions{display:none}
+  .mobile-menu{display:block}
+  .header-inner{min-height:74px}
+  .brand-logo img{width:150px;max-height:58px}
+
   .hero-grid,.about-grid{grid-template-columns:1fr}
+  .hero-grid{gap:34px}
+  .hero{padding:70px 0 58px}
+  .hero h1{max-width:none}
+
   .property-grid{grid-template-columns:1fr 1fr}
   .region-list{grid-template-columns:1fr 1fr}
   .footer-grid{grid-template-columns:1fr}
 }
 @media(max-width:640px){
   .container{width:min(100% - 28px,1180px)}
-  .header-actions .btn-outline{display:none}
-  .hero{padding:78px 0 64px}
-  .hero h1{font-size:45px;letter-spacing:-1px}
-  .section{padding:64px 0}
-  .section-heading{align-items:start;flex-direction:column}
+  .header-inner{min-height:68px}
+  .brand-logo img{width:132px;max-height:52px}
+
+  .hero{padding:52px 0 46px}
+  .hero h1{
+    font-size:39px;
+    line-height:1.02;
+    letter-spacing:-.8px;
+  }
+  .hero p{font-size:16px;line-height:1.65}
+  .hero-actions{display:grid;grid-template-columns:1fr}
+  .hero-actions .btn{width:100%}
+
+  .search-panel{padding:20px;border-radius:14px}
+  .search-panel h3{font-size:20px}
+  .field select,.field input{min-height:48px}
+
+  .section{padding:56px 0}
+  .section-heading{align-items:start;flex-direction:column;gap:14px}
+  .section-heading h2{font-size:34px}
+
   .property-grid,.region-list{grid-template-columns:1fr}
-  .contact-box{align-items:start;flex-direction:column;padding:28px}
+  .property-image{height:210px}
+  .property-body{padding:16px}
+  .property-meta{gap:9px}
+
+  .about-copy h2{font-size:36px}
+  .contact-box{align-items:start;flex-direction:column;padding:24px}
+  .contact-box h2{font-size:30px}
+  .contact-box .btn{width:100%}
+
+  .whatsapp-float{
+    width:52px;
+    height:52px;
+    right:14px;
+    bottom:14px;
+  }
+}
+@media(max-width:390px){
+  .brand-logo img{width:118px}
+  .hero h1{font-size:35px}
 }

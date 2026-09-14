@@ -3,8 +3,8 @@ export default function Footer(){
     <footer className="site-footer">
       <div className="container footer-grid">
         <div>
-          <div className="brand">NT <span>ALPHA</span></div>
-          <p>Imóveis selecionados em Alphaville e região.</p>
+          <img className="footer-logo" src="/images/ntalpha-logo.png" alt="NT ALPHA - Consultor Imobiliário" />
+          <p>Consultoria imobiliária em Alphaville e região.</p>
           <small>© 2026 NT ALPHA. Todos os direitos reservados.</small>
         </div>
         <div>
