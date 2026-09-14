@@ -1,17 +1,14 @@
-Atualização V4 do rodapé NT ALPHA.
+NT ALPHA — Rodapé FINAL aprovado
 
-Substitua no GitHub:
-- components/Footer.tsx
-- styles/contact.css
+Substituir/adicionar no GitHub:
+1) components/Footer.tsx
+2) styles/contact.css
+3) public/images/ntalpha-logo-footer.png
 
-O rodapé passa a ter:
-- identidade verde/dourado;
-- marca NT ALPHA sem quadrado branco;
-- contato mais destacado;
-- links rápidos;
-- responsável e CRECI;
-- rodapé inferior separado;
-- layout totalmente responsivo.
+Atenção:
+- Não substitua public/images/ntalpha-logo.png; ele continua sendo usado no cabeçalho.
+- O novo arquivo ntalpha-logo-footer.png é específico para o rodapé e possui fundo transparente.
+- Após o commit, aguarde o deploy da Cloudflare e atualize o site com Ctrl+F5.
 
 Commit sugerido:
-Melhora identidade visual e responsividade do rodapé
+Finaliza rodapé aprovado NT ALPHA com logo transparente

@@ -9,7 +9,7 @@ export default function Footer(){
         <section className="footer-brand">
           <a href="#inicio" className="footer-logo-link" aria-label="NT ALPHA Consultor Imobiliário">
             <img
-              src="/images/ntalpha-logo.png"
+              src="/images/ntalpha-logo-footer.png"
               alt="NT ALPHA Consultor Imobiliário"
               className="footer-logo"
             />
