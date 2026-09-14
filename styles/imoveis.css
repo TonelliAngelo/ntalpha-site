@@ -1,0 +1,42 @@
+.property-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+.property-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+}
+.property-image{
+  height:230px;
+  background:linear-gradient(145deg,#e0ddd6,#cfcac0);
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  padding:14px;
+}
+.property-badge{
+  background:rgba(255,255,255,.92);
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:999px;
+  padding:7px 9px;
+  font-size:11px;
+  font-weight:700;
+}
+.property-body{padding:18px}
+.property-title{margin:0 0 7px;font-size:20px}
+.property-location{color:var(--muted);font-size:14px}
+.property-meta{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin:16px 0;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+  color:#555b60;
+  font-size:13px;
+}
+.property-price{font-size:21px;font-weight:800}

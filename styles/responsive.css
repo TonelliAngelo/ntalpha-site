@@ -1,0 +1,17 @@
+@media(max-width:960px){
+  .nav{display:none}
+  .hero-grid,.about-grid{grid-template-columns:1fr}
+  .property-grid{grid-template-columns:1fr 1fr}
+  .region-list{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .container{width:min(100% - 28px,1180px)}
+  .header-actions .btn-outline{display:none}
+  .hero{padding:78px 0 64px}
+  .hero h1{font-size:45px;letter-spacing:-1px}
+  .section{padding:64px 0}
+  .section-heading{align-items:start;flex-direction:column}
+  .property-grid,.region-list{grid-template-columns:1fr}
+  .contact-box{align-items:start;flex-direction:column;padding:28px}
+}
