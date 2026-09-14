@@ -9,6 +9,7 @@ export default function Header(){
         </a>
 
         <nav className="nav desktop-nav">
+          <a className="nav-active" href="#inicio">Início</a>
           <a href="#imoveis">Imóveis</a>
           <a href="#sobre">Sobre</a>
           <a href="#regiao">Região</a>
@@ -16,13 +17,14 @@ export default function Header(){
         </nav>
 
         <div className="header-actions desktop-actions">
-          <a className="btn btn-outline" href="mailto:nivaldo@ntalpha.com.br">E-mail</a>
-          <a className="btn btn-primary" href={whatsapp} target="_blank">WhatsApp</a>
+          <a className="header-contact header-email" href="mailto:nivaldo@ntalpha.com.br">E-mail</a>
+          <a className="header-contact header-whatsapp" href={whatsapp} target="_blank">WhatsApp</a>
         </div>
 
         <details className="mobile-menu">
           <summary aria-label="Abrir menu">☰</summary>
           <div className="mobile-menu-panel">
+            <a className="nav-active" href="#inicio">Início</a>
             <a href="#imoveis">Imóveis</a>
             <a href="#sobre">Sobre</a>
             <a href="#regiao">Região</a>

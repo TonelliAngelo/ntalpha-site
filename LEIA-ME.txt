@@ -1,0 +1,16 @@
+Atualização V3 do cabeçalho NT ALPHA.
+
+Substitua no GitHub:
+- components/Header.tsx
+- styles/header.css
+
+Alterações:
+- logo maior;
+- efeito de fundo branco reduzido com mix-blend-mode;
+- menu verde escuro e negrito;
+- Início dourado com destaque;
+- E-mail e WhatsApp com peso normal;
+- responsividade preservada.
+
+Commit sugerido:
+Ajusta identidade visual do cabeçalho NT ALPHA
