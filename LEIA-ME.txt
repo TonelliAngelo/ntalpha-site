@@ -1,16 +1,17 @@
-Atualização V3 do cabeçalho NT ALPHA.
+Atualização V4 do rodapé NT ALPHA.
 
 Substitua no GitHub:
-- components/Header.tsx
-- styles/header.css
+- components/Footer.tsx
+- styles/contact.css
 
-Alterações:
-- logo maior;
-- efeito de fundo branco reduzido com mix-blend-mode;
-- menu verde escuro e negrito;
-- Início dourado com destaque;
-- E-mail e WhatsApp com peso normal;
-- responsividade preservada.
+O rodapé passa a ter:
+- identidade verde/dourado;
+- marca NT ALPHA sem quadrado branco;
+- contato mais destacado;
+- links rápidos;
+- responsável e CRECI;
+- rodapé inferior separado;
+- layout totalmente responsivo.
 
 Commit sugerido:
-Ajusta identidade visual do cabeçalho NT ALPHA
+Melhora identidade visual e responsividade do rodapé
