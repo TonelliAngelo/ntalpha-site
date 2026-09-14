@@ -96,9 +96,13 @@
   border:1.5px solid #d7ad50;
   border-radius:50%;
   color:#d7ad50;
-  font-size:12px;
-  font-weight:700;
   transition:.2s;
+}
+.footer-social a svg{
+  width:18px;
+  height:18px;
+  fill:currentColor;
+  display:block;
 }
 .footer-social a:hover{background:#d7ad50;color:#043b33}
 .footer-column h4{

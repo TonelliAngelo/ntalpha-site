@@ -1,14 +1,10 @@
-NT ALPHA — Rodapé FINAL aprovado
+NT ALPHA — Rodapé final (3 ajustes)
 
-Substituir/adicionar no GitHub:
-1) components/Footer.tsx
-2) styles/contact.css
-3) public/images/ntalpha-logo-footer.png
+1. Ícones sociais ajustados para ícones gráficos fiéis: WhatsApp e E-mail.
+2. Responsável alterado para Nivaldo Tonelli em negrito.
+3. Instagram removido/não incluído enquanto o perfil não estiver publicado.
 
-Atenção:
-- Não substitua public/images/ntalpha-logo.png; ele continua sendo usado no cabeçalho.
-- O novo arquivo ntalpha-logo-footer.png é específico para o rodapé e possui fundo transparente.
-- Após o commit, aguarde o deploy da Cloudflare e atualize o site com Ctrl+F5.
-
-Commit sugerido:
-Finaliza rodapé aprovado NT ALPHA com logo transparente
+Substituir no GitHub:
+- components/Footer.tsx
+- styles/contact.css
+- public/images/ntalpha-logo-footer.png (mantido)
