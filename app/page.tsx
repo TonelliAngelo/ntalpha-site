@@ -88,17 +88,23 @@ export default async function Home(){
                 <div><div className="eyebrow">Seleção NT ALPHA</div><h2>Imóveis em destaque</h2></div>
                 <p>Uma seleção especial de imóveis destacados pela NT ALPHA.</p>
               </div>
-              <div className="property-grid">{destaques.map(renderCard)}</div>
+              <div className="property-grid">{destaques.slice(0,4).map(renderCard)}</div>
+              <div className="property-showcase-action">
+                <a className="btn btn-outline" href="/imoveis">Ver mais imóveis</a>
+              </div>
             </div>
           </section>}
 
-          {disponiveis.length>0&&<section className={`section ${destaques.length>0?"section-muted":"section-light"}`}>
+          {imoveis.length>0&&<section className={`section ${destaques.length>0?"section-muted":"section-light"}`}>
             <div className="container">
               <div className="section-heading">
-                <div><div className="eyebrow">Imóveis publicados</div><h2>Imóveis disponíveis</h2></div>
-                <p>Confira os imóveis disponíveis para venda publicados pela NT ALPHA.</p>
+                <div><div className="eyebrow">Oportunidades disponíveis</div><h2>Imóveis disponíveis</h2></div>
+                <p>Conheça algumas das oportunidades disponíveis para venda pela NT ALPHA.</p>
               </div>
-              <div className="property-grid">{disponiveis.map(renderCard)}</div>
+              <div className="property-grid">{imoveis.slice(0,4).map(renderCard)}</div>
+              <div className="property-showcase-action">
+                <a className="btn btn-primary" href="/imoveis">Ver mais imóveis</a>
+              </div>
             </div>
           </section>}
 
