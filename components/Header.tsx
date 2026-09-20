@@ -10,7 +10,7 @@ export default function Header(){
 
         <nav className="nav desktop-nav">
           <a className="nav-active" href="/#inicio">Início</a>
-          <a href="/#imoveis">Imóveis</a>
+          <a href="/imoveis">Imóveis</a>
           <a href="/#sobre">Sobre</a>
           <a href="/#regiao">Região</a>
           <a href="/#contato">Contato</a>
@@ -25,7 +25,7 @@ export default function Header(){
           <summary aria-label="Abrir menu">☰</summary>
           <div className="mobile-menu-panel">
             <a className="nav-active" href="/#inicio">Início</a>
-            <a href="/#imoveis">Imóveis</a>
+            <a href="/imoveis">Imóveis</a>
             <a href="/#sobre">Sobre</a>
             <a href="/#regiao">Região</a>
             <a href="/#contato">Contato</a>
