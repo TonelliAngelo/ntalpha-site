@@ -41,7 +41,7 @@ export default async function ImovelPage({params}:{params:Promise<{codigo:string
  const {imovel,midias}=dados;
  const fotos=midias.filter(x=>x.tipo==="foto").sort((a,b)=>Number(b.principal)-Number(a.principal)||a.ordem-b.ordem);
  const video=midias.find(x=>x.tipo==="video");
- const whats=`https://wa.me/5511999517092?text=${encodeURIComponent(`Olá Nivaldo, vim pelo site da NT ALPHA e tenho interesse no imóvel ${imovel.codigo??imovel.titulo}. Gostaria de mais informações.`)}`;
+ const whats=`https://wa.me/5511999517092?text=${encodeURIComponent(`Olá Nivaldo, vim pelo site da NT ALPHA e tenho interesse no imóvel ${imovel.codigo ? `${imovel.codigo} - ` : ""}${imovel.titulo}. Gostaria de receber mais informações e verificar a possibilidade de agendar uma visita.`)}`;
  const itens=[
   imovel.dormitorios!=null&&["Dormitórios",String(imovel.dormitorios)],
   imovel.suites!=null&&["Suítes",String(imovel.suites)],
