@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PropertyGallery from "@/components/PropertyGallery";
 import {notFound} from "next/navigation";
 
 const SUPABASE_URL=process.env.NEXT_PUBLIC_SUPABASE_URL??"";
@@ -63,10 +64,7 @@ export default async function ImovelPage({params}:{params:Promise<{codigo:string
   </div></section>
 
   <section className="section section-light"><div className="container">
-   {fotos.length>0?<div className="property-gallery">
-    <div className="property-gallery-main"><img src={mediaUrl(fotos[0].path)} alt={`Foto principal de ${imovel.titulo}`}/></div>
-    {fotos.slice(1).length>0&&<div className="property-gallery-thumbs">{fotos.slice(1).map((f,i)=><img key={f.path} src={mediaUrl(f.path)} alt={`Foto ${i+2} de ${imovel.titulo}`}/>)}</div>}
-   </div>:<div className="property-gallery-empty">Imóvel sem fotos publicadas.</div>}
+   <PropertyGallery fotos={fotos.map((f,i)=>({src:mediaUrl(f.path),alt:`Foto ${i+1} de ${imovel.titulo}`}))}/>
 
    <div className="property-detail-layout">
     <div>
