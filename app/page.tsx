@@ -3,13 +3,31 @@ import Footer from "@/components/Footer";
 
 const whatsapp = "https://wa.me/5511999517092?text=Olá%20Nivaldo,%20vim%20pelo%20site%20da%20NT%20ALPHA%20e%20gostaria%20de%20mais%20informações.";
 
-const imoveis = [
-  {codigo:"NT-0001",tipo:"Apartamento",titulo:"Apartamento sofisticado em Alphaville",local:"Alphaville • Barueri/SP",meta:["4 suítes","4 vagas","280 m²"],preco:"R$ 2.850.000"},
-  {codigo:"NT-0002",tipo:"Casa",titulo:"Casa contemporânea em condomínio",local:"Alphaville • Santana de Parnaíba/SP",meta:["4 suítes","6 vagas","520 m²"],preco:"R$ 6.900.000"},
-  {codigo:"NT-0003",tipo:"Apartamento",titulo:"Apartamento amplo com vista privilegiada",local:"Tamboré • Barueri/SP",meta:["3 suítes","3 vagas","230 m²"],preco:"R$ 2.350.000"}
-];
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
+const BUCKET = "property-images";
 
-export default function Home(){
+type Imovel = { id:string; codigo:string|null; tipo:string; titulo:string; cidade:string|null; bairro:string|null; valor:number|null; dormitorios:number|null; suites:number|null; vagas:number|null; area_util:number|null; capa:string|null };
+
+async function carregarImoveis(): Promise<Imovel[]> {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return [];
+  const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
+  const pr = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,codigo,tipo,titulo,cidade,bairro,valor,dormitorios,suites,vagas,area_util&publicar_site=eq.true&status=eq.disponivel&order=created_at.desc`, {headers, cache:"no-store"});
+  if (!pr.ok) { console.error("Erro ao carregar imóveis", await pr.text()); return []; }
+  const props = await pr.json();
+  if (!props.length) return [];
+  const ids = props.map((p:any)=>p.id).join(",");
+  const ir = await fetch(`${SUPABASE_URL}/rest/v1/property_images?select=property_id,path&tipo=eq.foto&principal=eq.true&property_id=in.(${ids})`, {headers, cache:"no-store"});
+  const imgs = ir.ok ? await ir.json() : [];
+  const capas = new Map(imgs.map((x:any)=>[x.property_id,x.path]));
+  return props.map((p:any)=>({...p,capa:capas.get(p.id)??null}));
+}
+function foto(path:string){return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path.split("/").map(encodeURIComponent).join("/")}`;}
+function moeda(v:number|null){return v==null?"Consulte":new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0}).format(v);}
+
+
+export default async function Home(){
+  const imoveis = await carregarImoveis();
   return (
     <>
       <Header/>
@@ -42,23 +60,28 @@ export default function Home(){
           <div className="container">
             <div className="section-heading">
               <div><div className="eyebrow">Seleção NT ALPHA</div><h2>Imóveis em destaque</h2></div>
-              <p>Esta área será conectada ao Painel NT ALPHA. Imóveis cadastrados e marcados para publicação aparecerão automaticamente aqui.</p>
+              <p>Imóveis disponíveis e selecionados para publicação pela NT ALPHA.</p>
             </div>
             <div className="property-grid">
-              {imoveis.map(i=>(
-                <article className="property-card" key={i.codigo}>
-                  <div className="property-image">
+              {imoveis.map(i=>{
+                const meta=[
+                  i.suites?`${i.suites} ${i.suites===1?"suíte":"suítes"}`:(i.dormitorios?`${i.dormitorios} dormitórios`:null),
+                  i.vagas?`${i.vagas} ${i.vagas===1?"vaga":"vagas"}`:null,
+                  i.area_util!=null?`${i.area_util} m²`:null
+                ].filter(Boolean) as string[];
+                return <article className="property-card" key={i.id}>
+                  <div className="property-image" style={i.capa?{backgroundImage:`url("${foto(i.capa)}")`,backgroundSize:"cover",backgroundPosition:"center"}:undefined}>
                     <span className="property-badge">{i.tipo}</span>
-                    <span className="property-badge">{i.codigo}</span>
+                    {i.codigo&&<span className="property-badge">{i.codigo}</span>}
                   </div>
                   <div className="property-body">
                     <h3 className="property-title">{i.titulo}</h3>
-                    <div className="property-location">{i.local}</div>
-                    <div className="property-meta">{i.meta.map(m=><span key={m}>{m}</span>)}</div>
-                    <div className="property-price">{i.preco}</div>
+                    <div className="property-location">{[i.bairro,i.cidade].filter(Boolean).join(" • ")}</div>
+                    <div className="property-meta">{meta.map(m=><span key={m}>{m}</span>)}</div>
+                    <div className="property-price">{moeda(i.valor)}</div>
                   </div>
                 </article>
-              ))}
+              })}
             </div>
           </div>
         </section>
