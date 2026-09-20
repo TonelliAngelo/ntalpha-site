@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyGallery from "@/components/PropertyGallery";
+import InterestForm from "@/components/InterestForm";
 import {notFound} from "next/navigation";
 
 const SUPABASE_URL=process.env.NEXT_PUBLIC_SUPABASE_URL??"";
@@ -87,8 +88,13 @@ export default async function ImovelPage({params}:{params:Promise<{codigo:string
     </div>
     <aside className="property-interest-card">
      <span className="eyebrow">Tenho interesse</span><h2>{imovel.codigo}</h2>
-     <p>Fale diretamente com Nivaldo para receber mais informações e agendar uma visita.</p>
-     <a className="btn btn-primary" href={whats} target="_blank" rel="noreferrer">Falar no WhatsApp</a>
+     <p>Envie seus dados para a NT ALPHA ou continue o atendimento diretamente pelo WhatsApp.</p>
+     <InterestForm
+      propertyId={imovel.id}
+      codigo={imovel.codigo}
+      titulo={imovel.titulo}
+      whatsappUrl={whats}
+     />
      <div className="property-costs">
       {imovel.valor_condominio!=null&&<span><b>Condomínio</b>{dinheiro(imovel.valor_condominio)}</span>}
       {imovel.valor_iptu!=null&&<span><b>IPTU</b>{dinheiro(imovel.valor_iptu)}</span>}
