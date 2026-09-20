@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -14,6 +17,7 @@ const headers={apikey:KEY??"",Authorization:`Bearer ${KEY??""}`};
 
 function moeda(v:number|null){return v==null?"Valor sob consulta":new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0}).format(v)}
 function foto(path:string){return `${URL}/storage/v1/object/public/property-images/${path}`}
+function normalizar(v:string|null|undefined){return (v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()}
 
 async function carregarImoveis():Promise<Imovel[]>{
   if(!URL||!KEY)return [];
@@ -27,10 +31,38 @@ async function carregarImoveis():Promise<Imovel[]>{
   return props.map(p=>({...p,capa:imgs.find(i=>i.property_id===p.id)?.path??null}));
 }
 
-export const dynamic="force-dynamic";
+export default function ImoveisPage(){
+  const [imoveis,setImoveis]=useState<Imovel[]>([]);
+  const [carregando,setCarregando]=useState(true);
+  const [busca,setBusca]=useState("");
+  const [tipo,setTipo]=useState("");
+  const [local,setLocal]=useState("");
+  const [preco,setPreco]=useState("");
 
-export default async function ImoveisPage(){
-  const imoveis=await carregarImoveis();
+  useEffect(()=>{carregarImoveis().then(setImoveis).finally(()=>setCarregando(false))},[]);
+
+  const tipos=useMemo(()=>Array.from(new Set(imoveis.map(i=>i.tipo).filter(Boolean))).sort(),[imoveis]);
+  const locais=useMemo(()=>Array.from(new Set(imoveis.map(i=>[i.bairro,i.cidade].filter(Boolean).join(" • ")).filter(Boolean))).sort(),[imoveis]);
+
+  const filtrados=useMemo(()=>imoveis.filter(i=>{
+    const q=normalizar(busca.trim());
+    const texto=normalizar([i.codigo,i.titulo,i.tipo,i.bairro,i.cidade].filter(Boolean).join(" "));
+    if(q&&!texto.includes(q))return false;
+    if(tipo&&i.tipo!==tipo)return false;
+    if(local&&[i.bairro,i.cidade].filter(Boolean).join(" • ")!==local)return false;
+    if(preco){
+      const v=i.valor;
+      if(v==null)return false;
+      if(preco==="ate500"&&v>500000)return false;
+      if(preco==="500a1000"&&(v<500000||v>1000000))return false;
+      if(preco==="1000a2000"&&(v<1000000||v>2000000))return false;
+      if(preco==="acima2000"&&v<2000000)return false;
+    }
+    return true;
+  }),[imoveis,busca,tipo,local,preco]);
+
+  const limpar=()=>{setBusca("");setTipo("");setLocal("");setPreco("")};
+
   return <>
     <Header/>
     <main>
@@ -41,8 +73,44 @@ export default async function ImoveisPage(){
             <p>Confira todos os imóveis disponíveis para venda publicados pela NT ALPHA.</p>
           </div>
 
-          {imoveis.length>0?<div className="property-grid">
-            {imoveis.map(i=>{
+          <div className="property-filters">
+            <div className="property-filter-field property-filter-search">
+              <label htmlFor="busca">Buscar imóvel</label>
+              <input id="busca" value={busca} onChange={e=>setBusca(e.target.value)} placeholder="Código, nome, bairro ou cidade" />
+            </div>
+            <div className="property-filter-field">
+              <label htmlFor="tipo">Tipo</label>
+              <select id="tipo" value={tipo} onChange={e=>setTipo(e.target.value)}>
+                <option value="">Todos os tipos</option>
+                {tipos.map(t=><option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+            <div className="property-filter-field">
+              <label htmlFor="local">Cidade / Região</label>
+              <select id="local" value={local} onChange={e=>setLocal(e.target.value)}>
+                <option value="">Todas as regiões</option>
+                {locais.map(l=><option key={l} value={l}>{l}</option>)}
+              </select>
+            </div>
+            <div className="property-filter-field">
+              <label htmlFor="preco">Faixa de preço</label>
+              <select id="preco" value={preco} onChange={e=>setPreco(e.target.value)}>
+                <option value="">Qualquer valor</option>
+                <option value="ate500">Até R$ 500 mil</option>
+                <option value="500a1000">R$ 500 mil a R$ 1 milhão</option>
+                <option value="1000a2000">R$ 1 a R$ 2 milhões</option>
+                <option value="acima2000">Acima de R$ 2 milhões</option>
+              </select>
+            </div>
+            <button type="button" className="property-filter-clear" onClick={limpar}>Limpar filtros</button>
+          </div>
+
+          <div className="property-results-count">
+            {!carregando&&<span>{filtrados.length} {filtrados.length===1?"imóvel encontrado":"imóveis encontrados"}</span>}
+          </div>
+
+          {carregando?<p>Carregando imóveis...</p>:filtrados.length>0?<div className="property-grid">
+            {filtrados.map(i=>{
               const meta=[
                 i.suites?`${i.suites} ${i.suites===1?"suíte":"suítes"}`:(i.dormitorios?`${i.dormitorios} dormitórios`:null),
                 i.vagas?`${i.vagas} ${i.vagas===1?"vaga":"vagas"}`:null,
@@ -63,7 +131,7 @@ export default async function ImoveisPage(){
                 </a>
               </article>
             })}
-          </div>:<p>No momento não há imóveis publicados.</p>}
+          </div>:<div className="property-empty"><strong>Nenhum imóvel encontrado.</strong><p>Altere ou limpe os filtros para visualizar outras oportunidades.</p><button type="button" className="btn btn-outline" onClick={limpar}>Limpar filtros</button></div>}
         </div>
       </section>
     </main>
