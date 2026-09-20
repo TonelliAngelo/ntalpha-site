@@ -187,3 +187,92 @@
 .property-empty p{margin:8px 0 20px}
 @media(max-width:1050px){.property-filters{grid-template-columns:1fr 1fr}.property-filter-search{grid-column:1/-1}}
 @media(max-width:650px){.property-filters{grid-template-columns:1fr;padding:16px}.property-filter-search{grid-column:auto}.property-filter-clear{width:100%}}
+
+
+/* Formulário de interesse */
+.interest-form{
+  display:grid;
+  gap:13px;
+  margin-top:18px;
+}
+.interest-field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.interest-field label{
+  font-size:13px;
+  font-weight:700;
+  color:#30363a;
+}
+.interest-field input,
+.interest-field textarea{
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid rgba(0,0,0,.16);
+  border-radius:9px;
+  background:#fff;
+  padding:11px 12px;
+  font:inherit;
+  color:inherit;
+}
+.interest-field input{
+  height:44px;
+}
+.interest-field textarea{
+  min-height:92px;
+  resize:vertical;
+}
+.interest-field input:focus,
+.interest-field textarea:focus{
+  outline:2px solid rgba(181,145,63,.25);
+  border-color:#b5913f;
+}
+.interest-submit{
+  width:100%;
+  border:0;
+  cursor:pointer;
+}
+.interest-submit:disabled{
+  opacity:.65;
+  cursor:wait;
+}
+.interest-whatsapp-direct{
+  display:block;
+  text-align:center;
+  color:#075b47;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+  padding:4px 0;
+}
+.interest-whatsapp-direct:hover{
+  text-decoration:underline;
+}
+.interest-error{
+  margin:0;
+  padding:10px 12px;
+  border-radius:8px;
+  background:#fff3f3;
+  font-size:13px;
+}
+.interest-success{
+  margin-top:18px;
+  padding:16px;
+  border:1px solid rgba(0,0,0,.10);
+  border-radius:12px;
+  background:#f7f8f6;
+}
+.interest-success strong{
+  display:block;
+  margin-bottom:7px;
+}
+.interest-success p{
+  margin:0 0 14px;
+  line-height:1.5;
+}
+@media(max-width:900px){
+  .property-interest-card{
+    max-width:100%;
+  }
+}
