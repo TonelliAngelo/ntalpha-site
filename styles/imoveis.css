@@ -112,3 +112,16 @@
  .gallery-prev{left:8px}.gallery-next{right:8px}
  .gallery-close{right:12px;top:12px}
 }
+
+
+/* Vitrines de imóveis */
+.property-showcase-action{
+  display:flex;
+  justify-content:center;
+  margin-top:30px;
+}
+@media(min-width:1101px){
+  .property-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
