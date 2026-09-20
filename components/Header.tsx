@@ -1,6 +1,13 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
 const whatsapp = "https://wa.me/5511999517092?text=Olá%20Nivaldo,%20vim%20pelo%20site%20da%20NT%20ALPHA%20e%20gostaria%20de%20mais%20informações.";
 
 export default function Header(){
+  const pathname = usePathname();
+  const emImoveis = pathname === "/imoveis" || pathname.startsWith("/imoveis/");
+
   return (
     <header className="site-header">
       <div className="container header-inner">
@@ -9,8 +16,8 @@ export default function Header(){
         </a>
 
         <nav className="nav desktop-nav">
-          <a className="nav-active" href="/#inicio">Início</a>
-          <a href="/imoveis">Imóveis</a>
+          <a className={!emImoveis ? "nav-active" : undefined} href="/#inicio">Início</a>
+          <a className={emImoveis ? "nav-active" : undefined} href="/imoveis">Imóveis</a>
           <a href="/#sobre">Sobre</a>
           <a href="/#regiao">Região</a>
           <a href="/#contato">Contato</a>
@@ -24,8 +31,8 @@ export default function Header(){
         <details className="mobile-menu">
           <summary aria-label="Abrir menu">☰</summary>
           <div className="mobile-menu-panel">
-            <a className="nav-active" href="/#inicio">Início</a>
-            <a href="/imoveis">Imóveis</a>
+            <a className={!emImoveis ? "nav-active" : undefined} href="/#inicio">Início</a>
+            <a className={emImoveis ? "nav-active" : undefined} href="/imoveis">Imóveis</a>
             <a href="/#sobre">Sobre</a>
             <a href="/#regiao">Região</a>
             <a href="/#contato">Contato</a>
