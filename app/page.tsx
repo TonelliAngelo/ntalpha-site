@@ -7,12 +7,12 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 const BUCKET = "property-images";
 
-type Imovel = { id:string; codigo:string|null; tipo:string; titulo:string; cidade:string|null; bairro:string|null; valor:number|null; dormitorios:number|null; suites:number|null; vagas:number|null; area_util:number|null; capa:string|null };
+type Imovel = { id:string; codigo:string|null; tipo:string; titulo:string; cidade:string|null; bairro:string|null; valor:number|null; dormitorios:number|null; suites:number|null; vagas:number|null; area_util:number|null; destaque:boolean; capa:string|null };
 
 async function carregarImoveis(): Promise<Imovel[]> {
   if (!SUPABASE_URL || !SUPABASE_KEY) return [];
   const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
-  const pr = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,codigo,tipo,titulo,cidade,bairro,valor,dormitorios,suites,vagas,area_util&publicar_site=eq.true&status=eq.disponivel&order=created_at.desc`, {headers, cache:"no-store"});
+  const pr = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,codigo,tipo,titulo,cidade,bairro,valor,dormitorios,suites,vagas,area_util,destaque&publicar_site=eq.true&status=eq.disponivel&order=created_at.desc`, {headers, cache:"no-store"});
   if (!pr.ok) { console.error("Erro ao carregar imóveis", await pr.text()); return []; }
   const props = await pr.json();
   if (!props.length) return [];
@@ -28,6 +28,31 @@ function moeda(v:number|null){return v==null?"Consulte":new Intl.NumberFormat("p
 
 export default async function Home(){
   const imoveis = await carregarImoveis();
+  const destaques = imoveis.filter(i=>i.destaque);
+  const disponiveis = imoveis.filter(i=>!i.destaque);
+
+  const renderCard = (i:Imovel) => {
+    const meta=[
+      i.suites?`${i.suites} ${i.suites===1?"suíte":"suítes"}`:(i.dormitorios?`${i.dormitorios} dormitórios`:null),
+      i.vagas?`${i.vagas} ${i.vagas===1?"vaga":"vagas"}`:null,
+      i.area_util!=null?`${i.area_util} m²`:null
+    ].filter(Boolean) as string[];
+
+    return <article className="property-card" key={i.id}>
+      <a className="property-card-link" href={`/imoveis/${encodeURIComponent(i.codigo ?? "")}`}>
+        <div className="property-image" style={i.capa?{backgroundImage:`url("${foto(i.capa)}")`,backgroundSize:"cover",backgroundPosition:"center"}:undefined}>
+          <span className="property-badge">{i.tipo}</span>
+          {i.codigo&&<span className="property-badge">{i.codigo}</span>}
+        </div>
+        <div className="property-body">
+          <h3 className="property-title">{i.titulo}</h3>
+          <div className="property-location">{[i.bairro,i.cidade].filter(Boolean).join(" • ")}</div>
+          <div className="property-meta">{meta.map(m=><span key={m}>{m}</span>)}</div>
+          <div className="property-price">{moeda(i.valor)}</div>
+        </div>
+      </a>
+    </article>;
+  };
   return (
     <>
       <Header/>
@@ -56,37 +81,36 @@ export default async function Home(){
           </div>
         </section>
 
-        <section className="section section-light" id="imoveis">
-          <div className="container">
-            <div className="section-heading">
-              <div><div className="eyebrow">Seleção NT ALPHA</div><h2>Imóveis em destaque</h2></div>
-              <p>Imóveis disponíveis e selecionados para publicação pela NT ALPHA.</p>
+        <div id="imoveis">
+          {destaques.length>0&&<section className="section section-light">
+            <div className="container">
+              <div className="section-heading">
+                <div><div className="eyebrow">Seleção NT ALPHA</div><h2>Imóveis em destaque</h2></div>
+                <p>Uma seleção especial de imóveis destacados pela NT ALPHA.</p>
+              </div>
+              <div className="property-grid">{destaques.map(renderCard)}</div>
             </div>
-            <div className="property-grid">
-              {imoveis.map(i=>{
-                const meta=[
-                  i.suites?`${i.suites} ${i.suites===1?"suíte":"suítes"}`:(i.dormitorios?`${i.dormitorios} dormitórios`:null),
-                  i.vagas?`${i.vagas} ${i.vagas===1?"vaga":"vagas"}`:null,
-                  i.area_util!=null?`${i.area_util} m²`:null
-                ].filter(Boolean) as string[];
-                return <article className="property-card" key={i.id}>
-                  <a className="property-card-link" href={`/imoveis/${encodeURIComponent(i.codigo ?? "")}`}>
-                  <div className="property-image" style={i.capa?{backgroundImage:`url("${foto(i.capa)}")`,backgroundSize:"cover",backgroundPosition:"center"}:undefined}>
-                    <span className="property-badge">{i.tipo}</span>
-                    {i.codigo&&<span className="property-badge">{i.codigo}</span>}
-                  </div>
-                  <div className="property-body">
-                    <h3 className="property-title">{i.titulo}</h3>
-                    <div className="property-location">{[i.bairro,i.cidade].filter(Boolean).join(" • ")}</div>
-                    <div className="property-meta">{meta.map(m=><span key={m}>{m}</span>)}</div>
-                    <div className="property-price">{moeda(i.valor)}</div>
-                  </div>
-                  </a>
-                </article>
-              })}
+          </section>}
+
+          {disponiveis.length>0&&<section className={`section ${destaques.length>0?"section-muted":"section-light"}`}>
+            <div className="container">
+              <div className="section-heading">
+                <div><div className="eyebrow">Imóveis publicados</div><h2>Imóveis disponíveis</h2></div>
+                <p>Confira os imóveis disponíveis para venda publicados pela NT ALPHA.</p>
+              </div>
+              <div className="property-grid">{disponiveis.map(renderCard)}</div>
             </div>
-          </div>
-        </section>
+          </section>}
+
+          {imoveis.length===0&&<section className="section section-light">
+            <div className="container">
+              <div className="section-heading">
+                <div><div className="eyebrow">NT ALPHA</div><h2>Imóveis disponíveis</h2></div>
+                <p>No momento não há imóveis publicados. Novas oportunidades serão divulgadas aqui.</p>
+              </div>
+            </div>
+          </section>}
+        </div>
 
         <section className="section section-muted" id="sobre">
           <div className="container about-grid">
