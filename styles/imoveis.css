@@ -40,3 +40,52 @@
   font-size:13px;
 }
 .property-price{font-size:21px;font-weight:800}
+
+
+/* Página de detalhes do imóvel */
+.property-card{transition:transform .18s ease,box-shadow .18s ease}
+.property-card-link{display:block;color:inherit;text-decoration:none}
+.property-card:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.08)}
+.property-detail-hero{padding:54px 0 28px;background:#fff}
+.property-back{display:inline-block;margin-bottom:24px;color:var(--muted);text-decoration:none;font-weight:700}
+.property-detail-heading{display:flex;justify-content:space-between;gap:30px;align-items:end}
+.property-detail-heading h1{margin:8px 0;font-size:clamp(32px,5vw,52px)}
+.property-detail-heading p{margin:0;color:var(--muted)}
+.property-detail-price{font-size:28px;font-weight:800;white-space:nowrap}
+.property-gallery{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:34px}
+.property-gallery-main img,.property-gallery-thumbs img{width:100%;display:block;object-fit:cover;border-radius:16px}
+.property-gallery-main img{height:520px}
+.property-gallery-thumbs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.property-gallery-thumbs img{height:254px}
+.property-gallery-empty{padding:70px;text-align:center;border:1px solid var(--line);border-radius:16px;margin-bottom:34px}
+.property-detail-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:36px;align-items:start}
+.property-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.property-facts div{padding:18px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.property-facts small,.property-facts strong{display:block}
+.property-facts small{color:var(--muted);margin-bottom:5px}
+.property-detail-block{margin-top:34px}
+.property-detail-block h2{margin:0 0 16px;font-size:25px}
+.property-description{line-height:1.75;white-space:pre-line}
+.property-detail-list,.property-features{display:flex;flex-wrap:wrap;gap:10px}
+.property-detail-list span,.property-features span{padding:10px 13px;border:1px solid var(--line);border-radius:999px;background:#fff}
+.property-interest-card{position:sticky;top:100px;padding:26px;border:1px solid var(--line);border-radius:18px;background:#fff}
+.property-interest-card h2{margin:8px 0}
+.property-interest-card .btn{width:100%;text-align:center;margin-top:10px}
+.property-costs{display:grid;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.property-costs span{display:flex;justify-content:space-between;gap:15px}
+.property-detail-video{width:100%;max-height:620px;border-radius:16px;background:#111}
+@media(max-width:900px){
+ .property-detail-heading{display:block}
+ .property-detail-price{margin-top:18px}
+ .property-gallery,.property-detail-layout{grid-template-columns:1fr}
+ .property-gallery-main img{height:420px}
+ .property-gallery-thumbs{grid-template-columns:repeat(2,1fr)}
+ .property-interest-card{position:static}
+ .property-facts{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+ .property-detail-hero{padding:34px 0 18px}
+ .property-gallery-main img{height:300px}
+ .property-gallery-thumbs img{height:150px}
+ .property-facts{grid-template-columns:1fr 1fr}
+}
