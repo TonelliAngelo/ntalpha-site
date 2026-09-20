@@ -70,6 +70,7 @@ export default async function Home(){
                   i.area_util!=null?`${i.area_util} m²`:null
                 ].filter(Boolean) as string[];
                 return <article className="property-card" key={i.id}>
+                  <a className="property-card-link" href={`/imoveis/${encodeURIComponent(i.codigo ?? "")}`}>
                   <div className="property-image" style={i.capa?{backgroundImage:`url("${foto(i.capa)}")`,backgroundSize:"cover",backgroundPosition:"center"}:undefined}>
                     <span className="property-badge">{i.tipo}</span>
                     {i.codigo&&<span className="property-badge">{i.codigo}</span>}
@@ -80,6 +81,7 @@ export default async function Home(){
                     <div className="property-meta">{meta.map(m=><span key={m}>{m}</span>)}</div>
                     <div className="property-price">{moeda(i.valor)}</div>
                   </div>
+                  </a>
                 </article>
               })}
             </div>
