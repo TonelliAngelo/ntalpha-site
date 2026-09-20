@@ -4,16 +4,16 @@ export default function Header(){
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <a href="#inicio" className="brand-logo" aria-label="NT ALPHA">
+        <a href="/#inicio" className="brand-logo" aria-label="NT ALPHA">
           <img src="/images/ntalpha-logo.png" alt="NT ALPHA - Consultor Imobiliário" />
         </a>
 
         <nav className="nav desktop-nav">
-          <a className="nav-active" href="#inicio">Início</a>
-          <a href="#imoveis">Imóveis</a>
-          <a href="#sobre">Sobre</a>
-          <a href="#regiao">Região</a>
-          <a href="#contato">Contato</a>
+          <a className="nav-active" href="/#inicio">Início</a>
+          <a href="/#imoveis">Imóveis</a>
+          <a href="/#sobre">Sobre</a>
+          <a href="/#regiao">Região</a>
+          <a href="/#contato">Contato</a>
         </nav>
 
         <div className="header-actions desktop-actions">
@@ -24,11 +24,11 @@ export default function Header(){
         <details className="mobile-menu">
           <summary aria-label="Abrir menu">☰</summary>
           <div className="mobile-menu-panel">
-            <a className="nav-active" href="#inicio">Início</a>
-            <a href="#imoveis">Imóveis</a>
-            <a href="#sobre">Sobre</a>
-            <a href="#regiao">Região</a>
-            <a href="#contato">Contato</a>
+            <a className="nav-active" href="/#inicio">Início</a>
+            <a href="/#imoveis">Imóveis</a>
+            <a href="/#sobre">Sobre</a>
+            <a href="/#regiao">Região</a>
+            <a href="/#contato">Contato</a>
             <a href="mailto:nivaldo@ntalpha.com.br">E-mail</a>
             <a className="mobile-whatsapp" href={whatsapp} target="_blank">WhatsApp</a>
           </div>
