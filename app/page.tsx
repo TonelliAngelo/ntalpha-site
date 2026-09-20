@@ -113,9 +113,8 @@ export default async function Home(){
         </div>
 
         <section className="section section-muted" id="sobre">
-          <div className="container about-grid">
-            <div className="about-placeholder"/>
-            <div className="about-copy">
+          <div className="container">
+            <div className="about-copy about-copy-without-image">
               <div className="eyebrow">Atendimento próximo e especializado</div>
               <h2>NT ALPHA</h2>
               <p>A NT ALPHA atua na intermediação de venda de imóveis com foco em atendimento consultivo, discrição e relacionamento de confiança.</p>
