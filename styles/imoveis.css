@@ -160,3 +160,30 @@
     flex-basis:38px;
   }
 }
+
+
+/* Filtros do catálogo */
+.property-filters{
+  display:grid;
+  grid-template-columns:1.6fr repeat(3,1fr) auto;
+  gap:14px;
+  align-items:end;
+  margin:0 0 14px;
+  padding:20px;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:14px;
+}
+.property-filter-field{display:flex;flex-direction:column;gap:7px}
+.property-filter-field label{font-size:12px;font-weight:700;letter-spacing:.04em}
+.property-filter-field input,.property-filter-field select{
+  width:100%;height:44px;padding:0 12px;border:1px solid rgba(0,0,0,.18);
+  border-radius:8px;background:#fff;font:inherit;color:inherit;
+}
+.property-filter-field input:focus,.property-filter-field select:focus{outline:2px solid rgba(181,145,63,.28);border-color:#b5913f}
+.property-filter-clear{height:44px;padding:0 15px;border:0;background:transparent;text-decoration:underline;cursor:pointer;font:inherit}
+.property-results-count{min-height:26px;margin-bottom:18px;font-size:13px;opacity:.7}
+.property-empty{text-align:center;padding:48px 20px;border:1px dashed rgba(0,0,0,.18);border-radius:14px}
+.property-empty p{margin:8px 0 20px}
+@media(max-width:1050px){.property-filters{grid-template-columns:1fr 1fr}.property-filter-search{grid-column:1/-1}}
+@media(max-width:650px){.property-filters{grid-template-columns:1fr;padding:16px}.property-filter-search{grid-column:auto}.property-filter-clear{width:100%}}
