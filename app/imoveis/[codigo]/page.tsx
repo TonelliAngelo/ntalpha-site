@@ -56,7 +56,10 @@ export default async function ImovelPage({params}:{params:Promise<{codigo:string
 
  return <><Header/><main className="property-detail-page">
   <section className="property-detail-hero"><div className="container">
-   <a className="property-back" href="/#imoveis">← Voltar aos imóveis</a>
+   <a className="property-back property-back-button" href="/imoveis" aria-label="Voltar para a lista de imóveis">
+     <span className="property-back-icon" aria-hidden="true">←</span>
+     <span>Voltar aos imóveis</span>
+   </a>
    <div className="property-detail-heading">
     <div><div className="eyebrow">{imovel.tipo} • {imovel.codigo}</div><h1>{imovel.titulo}</h1><p>{[imovel.bairro,imovel.cidade].filter(Boolean).join(" • ")}</p></div>
     <div className="property-detail-price">{dinheiro(imovel.valor)}</div>
