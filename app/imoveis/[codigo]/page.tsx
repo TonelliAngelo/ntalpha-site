@@ -63,7 +63,6 @@ export default async function ImovelPage({params}:{params:Promise<{codigo:string
    </a>
    <div className="property-detail-heading">
     <div><div className="eyebrow">{imovel.tipo} • {imovel.codigo}</div><h1>{imovel.titulo}</h1><p>{[imovel.bairro,imovel.cidade].filter(Boolean).join(" • ")}</p></div>
-    <div className="property-detail-price">{dinheiro(imovel.valor)}</div>
    </div>
   </div></section>
 
@@ -73,6 +72,13 @@ export default async function ImovelPage({params}:{params:Promise<{codigo:string
    <div className="property-detail-layout">
     <div>
      <div className="property-facts">{itens.map(([k,v])=><div key={k}><small>{k}</small><strong>{v}</strong></div>)}</div>
+
+     <div className="property-value-strip">
+      {imovel.valor_condominio!=null&&<div className="property-value-item"><small>Condomínio</small><strong>{dinheiro(imovel.valor_condominio)}</strong></div>}
+      {imovel.valor_iptu!=null&&<div className="property-value-item"><small>IPTU</small><strong>{dinheiro(imovel.valor_iptu)}</strong></div>}
+      <div className="property-value-item property-value-main"><small>Valor do imóvel</small><strong>{dinheiro(imovel.valor)}</strong></div>
+     </div>
+
      {(imovel.bloco_torre||imovel.unidade||imovel.complemento||mobiliado)&&<section className="property-detail-block"><h2>Detalhes</h2><div className="property-detail-list">
       {imovel.bloco_torre&&<span><b>Bloco / Torre:</b> {imovel.bloco_torre}</span>}
       {imovel.unidade&&<span><b>Unidade:</b> {imovel.unidade}</span>}
@@ -95,10 +101,6 @@ export default async function ImovelPage({params}:{params:Promise<{codigo:string
       titulo={imovel.titulo}
       whatsappUrl={whats}
      />
-     <div className="property-costs">
-      {imovel.valor_condominio!=null&&<span><b>Condomínio</b>{dinheiro(imovel.valor_condominio)}</span>}
-      {imovel.valor_iptu!=null&&<span><b>IPTU</b>{dinheiro(imovel.valor_iptu)}</span>}
-     </div>
     </aside>
    </div>
   </div></section>
