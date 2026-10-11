@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 type Imovel = {
   id:string; codigo:string|null; tipo:string; titulo:string; cidade:string|null; bairro:string|null;
   valor:number|null; dormitorios:number|null; suites:number|null; vagas:number|null; area_util:number|null;
-  destaque:boolean; capa:string|null;
+  destaque:boolean; capa:string|null; [key:string]: unknown;
 };
 type Imagem = {property_id:string;path:string};
 
@@ -16,12 +16,20 @@ const KEY=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const headers={apikey:KEY??"",Authorization:`Bearer ${KEY??""}`};
 
 function moeda(v:number|null){return v==null?"Valor sob consulta":new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0}).format(v)}
+function finalidade(imovel:Imovel){
+ const valores=[imovel["finalidade"],imovel["modalidade"],imovel["operacao"],imovel["transacao"],imovel["tipo_negocio"]];
+ const raw=valores.find(v=>typeof v==="string"&&v.trim()) as string|undefined;
+ const normalizado=(raw??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+ if(normalizado.includes("loca")||normalizado.includes("alug")) return "Locação";
+ if(normalizado.includes("vend")) return "Venda";
+ return "Venda";
+}
 function foto(path:string){return `${URL}/storage/v1/object/public/property-images/${path}`}
 function normalizar(v:string|null|undefined){return (v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()}
 
 async function carregarImoveis():Promise<Imovel[]>{
   if(!URL||!KEY)return [];
-  const r=await fetch(`${URL}/rest/v1/properties?select=id,codigo,tipo,titulo,cidade,bairro,valor,dormitorios,suites,vagas,area_util,destaque&publicar_site=eq.true&status=eq.disponivel&order=created_at.desc`,{headers,cache:"no-store"});
+  const r=await fetch(`${URL}/rest/v1/properties?select=*&publicar_site=eq.true&status=eq.disponivel&order=created_at.desc`,{headers,cache:"no-store"});
   if(!r.ok)return [];
   const props=await r.json() as Omit<Imovel,"capa">[];
   if(!props.length)return [];
@@ -70,7 +78,7 @@ export default function ImoveisPage(){
         <div className="container">
           <div className="section-heading">
             <div><div className="eyebrow">Catálogo NT ALPHA</div><h1>Imóveis disponíveis</h1></div>
-            <p>Confira todos os imóveis disponíveis para venda publicados pela NT ALPHA.</p>
+            <p>Confira todos os imóveis disponíveis para compra, venda e locação publicados pela NT ALPHA.</p>
           </div>
 
           <div className="property-filters">
@@ -114,7 +122,7 @@ export default function ImoveisPage(){
               const meta=[
                 i.suites?`${i.suites} ${i.suites===1?"suíte":"suítes"}`:(i.dormitorios?`${i.dormitorios} dormitórios`:null),
                 i.vagas?`${i.vagas} ${i.vagas===1?"vaga":"vagas"}`:null,
-                i.area_util!=null?`${i.area_util} m²`:null
+                i.area_util!=null&&i.area_util>0?`${i.area_util} m²`:null
               ].filter(Boolean) as string[];
               return <article className="property-card" key={i.id}>
                 <a className="property-card-link" href={`/imoveis/${encodeURIComponent(i.codigo??"")}`}>
@@ -126,7 +134,7 @@ export default function ImoveisPage(){
                     <h2 className="property-title">{i.titulo}</h2>
                     <div className="property-location">{[i.bairro,i.cidade].filter(Boolean).join(" • ")}</div>
                     <div className="property-meta">{meta.map(m=><span key={m}>{m}</span>)}</div>
-                    <div className="property-price">{moeda(i.valor)}</div>
+                    <div className="property-price">{i.valor!=null&&i.valor>0?`${finalidade(i)} • ${moeda(i.valor)}`:"Valor sob consulta"}</div>
                   </div>
                 </a>
               </article>

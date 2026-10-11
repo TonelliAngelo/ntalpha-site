@@ -17,7 +17,7 @@ export default function Footer(){
 
           <p className="footer-lead">Consultoria imobiliária em Alphaville e região.</p>
           <p className="footer-description">
-            Compra e venda de imóveis com atendimento direto, discreto e personalizado.
+            Compra, venda e locação de imóveis com atendimento direto, discreto e personalizado.
           </p>
 
           <div className="footer-social">

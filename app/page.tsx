@@ -7,12 +7,12 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 const BUCKET = "property-images";
 
-type Imovel = { id:string; codigo:string|null; tipo:string; titulo:string; cidade:string|null; bairro:string|null; valor:number|null; dormitorios:number|null; suites:number|null; vagas:number|null; area_util:number|null; destaque:boolean; capa:string|null };
+type Imovel = { id:string; codigo:string|null; tipo:string; titulo:string; cidade:string|null; bairro:string|null; valor:number|null; dormitorios:number|null; suites:number|null; vagas:number|null; area_util:number|null; destaque:boolean; capa:string|null; [key:string]: unknown };
 
 async function carregarImoveis(): Promise<Imovel[]> {
   if (!SUPABASE_URL || !SUPABASE_KEY) return [];
   const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
-  const pr = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,codigo,tipo,titulo,cidade,bairro,valor,dormitorios,suites,vagas,area_util,destaque&publicar_site=eq.true&status=eq.disponivel&order=created_at.desc`, {headers, cache:"no-store"});
+  const pr = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=*&publicar_site=eq.true&status=eq.disponivel&order=created_at.desc`, {headers, cache:"no-store"});
   if (!pr.ok) { console.error("Erro ao carregar imóveis", await pr.text()); return []; }
   const props = await pr.json();
   if (!props.length) return [];
@@ -24,6 +24,14 @@ async function carregarImoveis(): Promise<Imovel[]> {
 }
 function foto(path:string){return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path.split("/").map(encodeURIComponent).join("/")}`;}
 function moeda(v:number|null){return v==null?"Consulte":new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0}).format(v);}
+function finalidade(imovel:Imovel){
+ const valores=[imovel["finalidade"],imovel["modalidade"],imovel["operacao"],imovel["transacao"],imovel["tipo_negocio"]];
+ const raw=valores.find(v=>typeof v==="string"&&v.trim()) as string|undefined;
+ const normalizado=(raw??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+ if(normalizado.includes("loca")||normalizado.includes("alug")) return "Locação";
+ if(normalizado.includes("vend")) return "Venda";
+ return "Venda";
+}
 
 
 export default async function Home(){
@@ -35,7 +43,7 @@ export default async function Home(){
     const meta=[
       i.suites?`${i.suites} ${i.suites===1?"suíte":"suítes"}`:(i.dormitorios?`${i.dormitorios} dormitórios`:null),
       i.vagas?`${i.vagas} ${i.vagas===1?"vaga":"vagas"}`:null,
-      i.area_util!=null?`${i.area_util} m²`:null
+      i.area_util!=null&&i.area_util>0?`${i.area_util} m²`:null
     ].filter(Boolean) as string[];
 
     return <article className="property-card" key={i.id}>
@@ -48,7 +56,7 @@ export default async function Home(){
           <h3 className="property-title">{i.titulo}</h3>
           <div className="property-location">{[i.bairro,i.cidade].filter(Boolean).join(" • ")}</div>
           <div className="property-meta">{meta.map(m=><span key={m}>{m}</span>)}</div>
-          <div className="property-price">{moeda(i.valor)}</div>
+          <div className="property-price">{i.valor!=null&&i.valor>0?`${finalidade(i)} • ${moeda(i.valor)}`:"Valor sob consulta"}</div>
         </div>
       </a>
     </article>;
@@ -62,7 +70,7 @@ export default async function Home(){
             <div>
               <div className="eyebrow">Imóveis selecionados • Alphaville e região</div>
               <h1>Imóveis escolhidos com critério, atendimento feito com proximidade.</h1>
-              <p>Compra e venda de imóveis em Alphaville, Barueri, Tamboré e Santana de Parnaíba com atendimento direto, discreto e personalizado.</p>
+              <p>Compra, venda e locação de imóveis em Alphaville, Barueri, Tamboré e Santana de Parnaíba com atendimento direto, discreto e personalizado.</p>
               <div className="hero-actions">
                 <a className="btn btn-primary" href="#imoveis">Ver imóveis</a>
                 <a className="btn btn-outline" href={whatsapp} target="_blank">Falar com Nivaldo</a>
@@ -99,7 +107,7 @@ export default async function Home(){
             <div className="container">
               <div className="section-heading">
                 <div><div className="eyebrow">Oportunidades disponíveis</div><h2>Imóveis disponíveis</h2></div>
-                <p>Conheça algumas das oportunidades disponíveis para venda pela NT ALPHA.</p>
+                <p>Conheça algumas das oportunidades disponíveis para venda e locação pela NT ALPHA.</p>
               </div>
               <div className="property-grid">{imoveis.slice(0,4).map(renderCard)}</div>
               <div className="property-showcase-action">
@@ -123,7 +131,7 @@ export default async function Home(){
             <div className="about-copy about-copy-without-image">
               <div className="eyebrow">Atendimento próximo e especializado</div>
               <h2>NT ALPHA</h2>
-              <p>A NT ALPHA atua na intermediação de venda de imóveis com foco em atendimento consultivo, discrição e relacionamento de confiança.</p>
+              <p>A NT ALPHA atua na intermediação de compra, venda e locação de imóveis com foco em atendimento consultivo, discrição e relacionamento de confiança.</p>
               <p>O objetivo é conectar cada cliente ao imóvel adequado ao seu momento e manter uma operação organizada com tecnologia própria de apoio ao atendimento e à divulgação.</p>
               <div className="credential-row">
                 <span className="credential">Nivaldo</span>

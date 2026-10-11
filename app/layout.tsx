@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Consultoria imobiliária para compra e venda de imóveis em Alphaville, Barueri, Tamboré e Santana de Parnaíba. Atendimento direto com Nivaldo Tonelli, CRECI 82752-F.",
+    "Consultoria imobiliária para compra, venda e locação de imóveis em Alphaville, Barueri, Tamboré e Santana de Parnaíba. Atendimento direto com Nivaldo Tonelli, CRECI 82752-F.",
 
   alternates: {
     canonical: "/",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "NT ALPHA",
     title: "NT ALPHA | Consultoria Imobiliária em Alphaville e Região",
     description:
-      "Compra e venda de imóveis em Alphaville, Barueri, Tamboré e Santana de Parnaíba com atendimento direto e personalizado.",
+      "Compra, venda e locação de imóveis em Alphaville, Barueri, Tamboré e Santana de Parnaíba com atendimento direto e personalizado.",
   },
 
   robots: {
