@@ -64,7 +64,7 @@ export default async function ImovelPage({params}:{params:Promise<{codigo:string
   valorPositivo(imovel.ano_construcao)&&["Ano",String(imovel.ano_construcao)]
  ].filter(Boolean) as string[][];
  const modalidade=modalidadeDoImovel(imovel);
- const rotuloValor=modalidade?`Valor do imóvel ${modalidade}`:"Valor do imóvel";
+ const rotuloValor="Valor do imóvel";
  const mobiliado=imovel.mobiliado==="sim"?"Sim":imovel.mobiliado==="parcial"?"Parcialmente":imovel.mobiliado==="nao"?"Não":null;
 
  return <><Header/><main className="property-detail-page">
