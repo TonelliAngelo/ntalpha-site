@@ -7,23 +7,25 @@ import Footer from "@/components/Footer";
 type Imovel = {
   id:string; codigo:string|null; tipo:string; titulo:string; cidade:string|null; bairro:string|null;
   valor:number|null; dormitorios:number|null; suites:number|null; vagas:number|null; area_util:number|null;
-  destaque:boolean; capa:string|null; [key:string]: unknown;
+  destaque:boolean; capa:string|null;
+  finalidade?:string|null; modalidade?:string|null; negocio?:string|null; tipo_negocio?:string|null; operacao?:string|null;
 };
 type Imagem = {property_id:string;path:string};
 
 const URL=process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+function modalidadeDoImovel(i:Imovel){
+  const raw=[i.finalidade,i.modalidade,i.negocio,i.tipo_negocio,i.operacao].find(v=>typeof v==="string"&&v.trim());
+  if(!raw)return null;
+  const n=raw.trim().toLowerCase();
+  if(n.includes("loc")||n.includes("alug"))return "Locação";
+  if(n.includes("vend")||n.includes("compr"))return "Venda";
+  return raw.trim();
+}
 const KEY=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const headers={apikey:KEY??"",Authorization:`Bearer ${KEY??""}`};
 
 function moeda(v:number|null){return v==null?"Valor sob consulta":new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0}).format(v)}
-function finalidade(imovel:Imovel){
- const valores=[imovel["finalidade"],imovel["modalidade"],imovel["operacao"],imovel["transacao"],imovel["tipo_negocio"]];
- const raw=valores.find(v=>typeof v==="string"&&v.trim()) as string|undefined;
- const normalizado=(raw??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
- if(normalizado.includes("loca")||normalizado.includes("alug")) return "Locação";
- if(normalizado.includes("vend")) return "Venda";
- return "Venda";
-}
 function foto(path:string){return `${URL}/storage/v1/object/public/property-images/${path}`}
 function normalizar(v:string|null|undefined){return (v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()}
 
@@ -78,7 +80,7 @@ export default function ImoveisPage(){
         <div className="container">
           <div className="section-heading">
             <div><div className="eyebrow">Catálogo NT ALPHA</div><h1>Imóveis disponíveis</h1></div>
-            <p>Confira todos os imóveis disponíveis para compra, venda e locação publicados pela NT ALPHA.</p>
+            <p>Confira os imóveis disponíveis para compra, venda e locação publicados pela NT ALPHA.</p>
           </div>
 
           <div className="property-filters">
@@ -120,10 +122,12 @@ export default function ImoveisPage(){
           {carregando?<p>Carregando imóveis...</p>:filtrados.length>0?<div className="property-grid">
             {filtrados.map(i=>{
               const meta=[
-                i.suites?`${i.suites} ${i.suites===1?"suíte":"suítes"}`:(i.dormitorios?`${i.dormitorios} dormitórios`:null),
-                i.vagas?`${i.vagas} ${i.vagas===1?"vaga":"vagas"}`:null,
-                i.area_util!=null&&i.area_util>0?`${i.area_util} m²`:null
+                Number(i.suites)>0?`${i.suites} ${i.suites===1?"suíte":"suítes"}`:(Number(i.dormitorios)>0?`${i.dormitorios} dormitórios`:null),
+                Number(i.vagas)>0?`${i.vagas} ${i.vagas===1?"vaga":"vagas"}`:null,
+                Number(i.area_util)>0?`${i.area_util} m²`:null
               ].filter(Boolean) as string[];
+              const modalidade=modalidadeDoImovel(i);
+              const rotuloValor=modalidade?`Valor ${modalidade}`:"Valor do imóvel";
               return <article className="property-card" key={i.id}>
                 <a className="property-card-link" href={`/imoveis/${encodeURIComponent(i.codigo??"")}`}>
                   <div className="property-image" style={i.capa?{backgroundImage:`url("${foto(i.capa)}")`,backgroundSize:"cover",backgroundPosition:"center"}:undefined}>
@@ -133,8 +137,8 @@ export default function ImoveisPage(){
                   <div className="property-body">
                     <h2 className="property-title">{i.titulo}</h2>
                     <div className="property-location">{[i.bairro,i.cidade].filter(Boolean).join(" • ")}</div>
-                    <div className="property-meta">{meta.map(m=><span key={m}>{m}</span>)}</div>
-                    <div className="property-price">{i.valor!=null&&i.valor>0?`${finalidade(i)} • ${moeda(i.valor)}`:"Valor sob consulta"}</div>
+                    {meta.length>0&&<div className="property-meta">{meta.map(m=><span key={m}>{m}</span>)}</div>}
+                    <div className="property-price"><small>{rotuloValor}</small>{moeda(i.valor)}</div>
                   </div>
                 </a>
               </article>

@@ -14,8 +14,8 @@ type Imovel={
  dormitorios:number|null;suites:number|null;banheiros:number|null;vagas:number|null;
  area_util:number|null;area_total:number|null;ano_construcao:number|null;mobiliado:string|null;
  andar:number|null;bloco_torre:string|null;unidade:string|null;complemento:string|null;
- caracteristicas:string[]|null;outras_caracteristicas:string|null;descricao:string|null;
- [key:string]: unknown;
+ finalidade?:string|null;modalidade?:string|null;negocio?:string|null;tipo_negocio?:string|null;operacao?:string|null;
+ caracteristicas:string[]|null;outras_caracteristicas:string|null;descricao:string|null
 };
 type Midia={path:string;ordem:number;tipo:"foto"|"video";principal:boolean;nome_arquivo:string|null};
 
@@ -23,15 +23,15 @@ const headers=()=>({apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`})
 const mediaUrl=(path:string)=>`${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path.split("/").map(encodeURIComponent).join("/")}`;
 const dinheiro=(v:number|null)=>v==null?"Consulte":new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0}).format(v);
 const numero=(v:number)=>new Intl.NumberFormat("pt-BR",{maximumFractionDigits:2}).format(v);
-
-function finalidade(imovel:Imovel){
- const valores=[imovel["finalidade"],imovel["modalidade"],imovel["operacao"],imovel["transacao"],imovel["tipo_negocio"]];
- const raw=valores.find(v=>typeof v==="string"&&v.trim()) as string|undefined;
- const normalizado=(raw??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
- if(normalizado.includes("loca")||normalizado.includes("alug")) return "Locação";
- if(normalizado.includes("vend")) return "Venda";
- return "Venda";
-}
+const valorPositivo=(v:number|null|undefined)=>v!=null&&Number(v)>0;
+const modalidadeDoImovel=(i:Imovel)=>{
+ const raw=[i.finalidade,i.modalidade,i.negocio,i.tipo_negocio,i.operacao].find(v=>typeof v==="string"&&v.trim());
+ if(!raw)return null;
+ const n=raw.trim().toLowerCase();
+ if(n.includes("loc")||n.includes("alug"))return "Locação";
+ if(n.includes("vend")||n.includes("compr"))return "Venda";
+ return raw.trim();
+};
 
 async function carregar(codigo:string){
  if(!SUPABASE_URL||!SUPABASE_KEY)return null;
@@ -54,16 +54,17 @@ export default async function ImovelPage({params}:{params:Promise<{codigo:string
  const video=midias.find(x=>x.tipo==="video");
  const whats=`https://wa.me/5511999517092?text=${encodeURIComponent(`Olá Nivaldo, vim pelo site da NT ALPHA e tenho interesse no imóvel ${imovel.codigo ? `${imovel.codigo} - ` : ""}${imovel.titulo}. Gostaria de receber mais informações e verificar a possibilidade de agendar uma visita.`)}`;
  const itens=[
-  imovel.dormitorios!=null&&imovel.dormitorios>0&&["Dormitórios",String(imovel.dormitorios)],
-  imovel.suites!=null&&imovel.suites>0&&["Suítes",String(imovel.suites)],
-  imovel.banheiros!=null&&imovel.banheiros>0&&["Banheiros",String(imovel.banheiros)],
-  imovel.vagas!=null&&imovel.vagas>0&&["Vagas",String(imovel.vagas)],
-  imovel.area_util!=null&&imovel.area_util>0&&["Área útil",`${numero(imovel.area_util)} m²`],
-  imovel.area_total!=null&&imovel.area_total>0&&["Área total",`${numero(imovel.area_total)} m²`],
-  imovel.andar!=null&&imovel.andar>0&&["Andar",String(imovel.andar)],
-  imovel.ano_construcao!=null&&imovel.ano_construcao>0&&["Ano",String(imovel.ano_construcao)]
+  valorPositivo(imovel.dormitorios)&&["Dormitórios",String(imovel.dormitorios)],
+  valorPositivo(imovel.suites)&&["Suítes",String(imovel.suites)],
+  valorPositivo(imovel.banheiros)&&["Banheiros",String(imovel.banheiros)],
+  valorPositivo(imovel.vagas)&&["Vagas",String(imovel.vagas)],
+  valorPositivo(imovel.area_util)&&["Área útil",`${numero(imovel.area_util!)} m²`],
+  valorPositivo(imovel.area_total)&&["Área total",`${numero(imovel.area_total!)} m²`],
+  imovel.andar!=null&&String(imovel.andar).trim()!==""&&["Andar",String(imovel.andar)],
+  valorPositivo(imovel.ano_construcao)&&["Ano",String(imovel.ano_construcao)]
  ].filter(Boolean) as string[][];
- const tipoNegocio=finalidade(imovel);
+ const modalidade=modalidadeDoImovel(imovel);
+ const rotuloValor=modalidade?`Valor do imóvel ${modalidade}`:"Valor do imóvel";
  const mobiliado=imovel.mobiliado==="sim"?"Sim":imovel.mobiliado==="parcial"?"Parcialmente":imovel.mobiliado==="nao"?"Não":null;
 
  return <><Header/><main className="property-detail-page">
@@ -82,17 +83,16 @@ export default async function ImovelPage({params}:{params:Promise<{codigo:string
 
    <div className="property-detail-layout">
     <div>
-     <div className="property-facts">{itens.map(([k,v])=><div key={k}><small>{k}</small><strong>{v}</strong></div>)}</div>
+     {itens.length>0&&<div className="property-facts">{itens.map(([k,v])=><div key={k}><small>{k}</small><strong>{v}</strong></div>)}</div>}
 
-     <div className="property-value-strip">
-      {imovel.valor_condominio!=null&&imovel.valor_condominio>0&&<div className="property-value-item"><small>Condomínio</small><strong>{dinheiro(imovel.valor_condominio)}</strong></div>}
-      {imovel.valor_iptu!=null&&imovel.valor_iptu>0&&<div className="property-value-item"><small>IPTU</small><strong>{dinheiro(imovel.valor_iptu)}</strong></div>}
-      {imovel.valor!=null&&imovel.valor>0&&<div className="property-value-item property-value-main"><small>Valor do imóvel {tipoNegocio}</small><strong>{dinheiro(imovel.valor)}</strong></div>}
-     </div>
+     {(valorPositivo(imovel.valor_condominio)||valorPositivo(imovel.valor_iptu)||imovel.valor!=null)&&<div className="property-value-strip">
+      {valorPositivo(imovel.valor_condominio)&&<div className="property-value-item"><small>Condomínio</small><strong>{dinheiro(imovel.valor_condominio)}</strong></div>}
+      {valorPositivo(imovel.valor_iptu)&&<div className="property-value-item"><small>IPTU</small><strong>{dinheiro(imovel.valor_iptu)}</strong></div>}
+      {imovel.valor!=null&&<div className="property-value-item property-value-main"><small>{rotuloValor}</small><strong>{dinheiro(imovel.valor)}</strong></div>}
+     </div>}
 
-     {(imovel.bloco_torre||imovel.unidade||imovel.complemento||mobiliado)&&<section className="property-detail-block"><h2>Detalhes</h2><div className="property-detail-list">
+     {(imovel.bloco_torre||mobiliado)&&<section className="property-detail-block"><h2>Detalhes</h2><div className="property-detail-list">
       {imovel.bloco_torre&&<span><b>Bloco / Torre:</b> {imovel.bloco_torre}</span>}
-      {imovel.unidade&&<span><b>Unidade:</b> {imovel.unidade}</span>}
       {mobiliado&&<span><b>Mobiliado:</b> {mobiliado}</span>}
      </div></section>}
      {imovel.descricao&&<section className="property-detail-block"><h2>Sobre o imóvel</h2><p className="property-description">{imovel.descricao}</p></section>}
